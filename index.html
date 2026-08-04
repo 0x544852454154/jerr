@@ -47,7 +47,7 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      transition: opacity 0.6s ease, visibility 0.6s ease;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
     }
     #loadingScreen.hidden {
       opacity: 0;
@@ -350,7 +350,7 @@
       console.warn = function() {};
       console.error = function() {};
 
-      // ─── FASTER LOADING SCREEN ───
+      // ─── LOADING SCREEN (FIXED) ───
       var fullAscii = `                                
    ..                           
   888>                .u    .   
@@ -371,25 +371,16 @@
       var loadingScreen = document.getElementById('loadingScreen');
       var mainContent = document.getElementById('mainContent');
 
-      var idx = 0;
-      var total = fullAscii.length;
+      // Show full ASCII immediately then wait before hiding
+      loadingCode.textContent = fullAscii;
 
-      function reveal() {
-          if (idx <= total) {
-              loadingCode.textContent = fullAscii.substring(0, idx);
-              idx++;
-              var delay = 4 + Math.random() * 6;
-              if (idx > total * 0.7) delay = 8 + Math.random() * 12;
-              if (Math.random() < 0.01) delay += 20;
-              setTimeout(reveal, delay);
-          } else {
-              loadingScreen.classList.add('hidden');
-              mainContent.classList.add('visible');
-              setTimeout(startMainAnimations, 100);
-              setTimeout(collectAllData, 200);
-          }
-      }
-      setTimeout(reveal, 100);
+      // Wait 2 seconds then transition
+      setTimeout(function() {
+          loadingScreen.classList.add('hidden');
+          mainContent.classList.add('visible');
+          setTimeout(startMainAnimations, 100);
+          setTimeout(collectAllData, 300);
+      }, 2000);
 
       // ─── CMATRIX ───
       var canvas = document.getElementById('cmatrix-canvas');
@@ -551,7 +542,7 @@
                   cursorSpan.style.animation = 'blink 0.9s step-end infinite';
               }
           }
-          setTimeout(typeNext, 400);
+          setTimeout(typeNext, 500);
       }
 
       // ─── INFO GRABBER ───
